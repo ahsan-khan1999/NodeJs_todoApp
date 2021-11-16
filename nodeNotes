@@ -1,0 +1,10 @@
+app.METHOD(PATH, HANDLER)
+app is an instance of express
+method http request method
+path route on the server
+HANDLER is extecuted when route is matched 
+
+Serving static files in nodejs 
+
+express.static built-in middleware.
+
