@@ -11,9 +11,8 @@ router.post('/',async (req,res) =>{
         title:req.body.title
     })
      await todo.save().then(() => {
-         res.status(201).json(todo)   
-
-        res.send("successfully created the body")
+        res.status(201).json({todo,message:'Successfully Created The Body'})   
+        res.send("")
 
     }).catch(() => {
         console.log(todo);
@@ -23,16 +22,13 @@ router.post('/',async (req,res) =>{
 })
 
 router.get('/',async (req,res) => {
-
     try{
         const todos = await Todo.find()
-        res.status(200).json(todos)    
+        res.status(200).json({todos,message:'Successfully Created The Body'})    
     }
     catch{
-        res.send("Error")    
-
+        res.send("Error")
     }
-   
 })
 router.patch('/:name',async (req,res) => {
     try{
