@@ -1,65 +1,86 @@
-var user_utils = require('../utils/user_utils')
-var response_codes = require('../utils/response_codes')
-var Joi = require('joi');
+var user_utils = require("../utils/user_utils");
+
+var response_codes = require("../utils/response_codes");
+var user_modal = require("../schema/user_model");
+var Joi = require("joi");
+var validate = require("../utils/user_utils");
 
 /* CRUD Operations */
 
 /* Create Operations */
-function signup_user_controller(singup_data){
-  
-}
+function signup_user_controller(singup_data) {}
 
 /* Read Operations */
-function login_user_controller(login_data){
-  
-}
+function login_user_controller(login_data) {}
 
-
-function read_users_controller(filter_data){
-  if (!filter_data) { 
+function read_users_controller(filter_data) {
+  if (!filter_data) {
+    response_codes;
     const users = user_model.find();
-    return users, response_codes.CODE_RESPONSE_SUCCESS, response_codes.MESSAGE_RESPONSE_SUCCESS
+    return (
+      users,
+      response_codes.CODE_RESPONSE_SUCCESS,
+      response_codes.MESSAGE_RESPONSE_SUCCESS
+    );
   }
 
-  res.status(200).json({user: users, response_message: "Successful response"});
+  res
+    .status(200)
+    .json({ user: users, response_message: "Successful response" });
 }
 
 /* Update Operations */
-function update_user_controller(update_data){
-  
-}
+const update_user_controller = async(req,res) => {
+  try {
+    
+    result = validate.validate_user_update_field(req.body);
+    console.log(result,"at result");
+    if(result.error){
+      res.status(400).send({response_message:ressult.error.details[0].message})
+    } else{
+
+      const id = req.params.id
+      // console.log(body,"at body");
+      // validate.validate_user_update_field(body);
+      const user =await  user_modal.findOneAndUpdate(
+        {
+          _id:id,
+        },
+        {name: req.body.name,
+          email_address: req.body.email_address,
+          password: req.body.password,
+          status: req.body.status},
+        {
+          returnDocument: "after",
+        }
+      );
+      console.log(user,"at user");
+      return res
+        .status(response_codes.CODE_RESPONSE_SUCCESS)
+        .json({
+          user: user,
+          response_message: response_codes.MESSAGE_RESPONSE_SUCCESS,
+        });
+    }
+    
+    
+
+  } catch {
+    // return res
+    //   .status(response_codes.CODE_RESPONSE_ERROR)
+    //   .json({
+    //     response_message: response_codes.MESSAGE_RESPONSE_ERROR,
+    //   });
+  }
+};
 
 /* Delete Operations */
-function remove_user_controller(remove_id){
-  
-}
-
-
-function validate_login_fields(body){
-    const schema = {
-      email_address: Joi.string().email().required(),
-      password: Joi.string().min(8).max(64).required()
-    };
-    return Joi.validate(body, schema);
-  }
-
-
-function validate_signup_fields(body){
-    const schema = {
-        name: Joi.string().min(3).max(32).required(),
-        email_address: Joi.string().email().required(),
-        password: Joi.string().min(8).max(64).required()
-    };
-    return Joi.validate(body, schema);
-}
-
+function remove_user_controller(remove_id) {}
 
 module.exports = {
-  validate_login_fields: validate_login_fields,
-  validate_signup_fields: validate_signup_fields,
   read_users_controller: read_users_controller,
   signup_user_controller: signup_user_controller,
   login_user_controller: login_user_controller,
   remove_user_controller: remove_user_controller,
-  update_user_controller: update_user_controller
-}
+  update_user_controller: update_user_controller,
+};

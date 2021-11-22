@@ -60,4 +60,7 @@ router.post('/signup', async (req, res) => {
   })
 });
 
+
+router.put('/:id',user_controller.update_user_controller)
+
 module.exports = router
