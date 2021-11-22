@@ -1,14 +1,13 @@
+var common_utils = require("../utils/common_utils");
 var user_utils = require("../utils/user_utils");
-
+var user_model = require("../schema/user_model");
 var response_codes = require("../utils/response_codes");
-var user_modal = require("../schema/user_model");
 var Joi = require("joi");
-var validate = require("../utils/user_utils");
 
 /* CRUD Operations */
 
 /* Create Operations */
-function signup_user_controller(singup_data) {}
+function signup_user_controller(signup_data) {}
 
 /* Read Operations */
 function login_user_controller(login_data) {}
@@ -73,6 +72,27 @@ const update_user_controller = async(req,res) => {
     //   });
   }
 };
+
+read_users_controller = async (filter_data=[]) => {
+  if (Object.keys(filter_data).length < 1) {
+    const users = await user_model.find();
+    return {
+      users: users,
+      response_code: response_codes.CODE_RESPONSE_SUCCESS,
+      response_message: response_codes.MESSAGE_RESPONSE_SUCCESS
+    };
+  }
+
+  const users = await user_model.findById(filter_data.id);
+
+  return {
+    users: users,
+    response_code: response_codes.CODE_RESPONSE_SUCCESS,
+    response_message: response_codes.MESSAGE_RESPONSE_SUCCESS
+  };
+};
+
+/* Update Operations */
 
 /* Delete Operations */
 function remove_user_controller(remove_id) {}
